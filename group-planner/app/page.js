@@ -19,8 +19,9 @@ const DEFAULT_NOTES = {
 }
 
 const STATUS_CFG = {
-  busy: { bg:"#fecaca", text:"#7f1d1d", border:"#f87171", sym:"✕" },
-  null: { bg:"#f9fafb", text:"#d1d5db", border:"#e5e7eb", sym:"" },
+  busy:  { bg:"#fecaca", text:"#7f1d1d", border:"#f87171", sym:"✕" },
+  maybe: { bg:"#fef9c3", text:"#854d0e", border:"#fcd34d", sym:"?" },
+  null:  { bg:"#f9fafb", text:"#d1d5db", border:"#e5e7eb", sym:"" },
 }
 
 function dateKey(d) { return d.toISOString().slice(0,10) }
@@ -80,7 +81,8 @@ export default function App() {
 
   async function toggleStatus(member, date){
     const cur=getStatus(member,date)
-    const next = cur==="busy" ? null : "busy"
+    const cycle = [null, "busy", "maybe"]
+    const next = cycle[(cycle.indexOf(cur)+1) % cycle.length]
     const dk=dateKey(date)
     const now = new Date().toISOString()
 
@@ -173,7 +175,7 @@ export default function App() {
         ))}
         {selMember && (
           <span style={{fontSize:11,color:"#9ca3af",marginLeft:4}}>
-            Tap cell to mark <strong>busy ✕</strong> · tap again to clear
+            Tap cell → blank → ✕ busy → ? maybe → blank
           </span>
         )}
       </div>
